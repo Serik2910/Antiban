@@ -29,36 +29,36 @@ namespace Antiban
 
                     if (eventMessage.Priority == 1)
                     {
-                        var eventMessageWithSameNumberWithinDay = result_.FindLast(x =>
+                        var eventMessageWithSameNumberWithinDay = result_.Find(x =>
                             (x.Phone == eventMessage.Phone) && (x.Priority == 1) &&
                             Math.Abs((x.DateTime - targetDateTime).TotalHours) < 24);
                         while (eventMessageWithSameNumberWithinDay != null)
                         {
-                            targetDateTime = eventMessageWithSameNumberWithinDay.DateTime.AddHours(24);
+                            targetDateTime = eventMessageWithSameNumberWithinDay.SentDateTime.AddHours(24);
                             eventMessageWithSameNumberWithinDay = result_.Find(x =>
-                                (x.Phone == eventMessage.Phone) && (x.Priority == 1) && Math.Abs((x.DateTime - targetDateTime).TotalHours) < 24);
+                                (x.Phone == eventMessage.Phone) && (x.Priority == 1) && Math.Abs((x.SentDateTime - targetDateTime).TotalHours) < 24);
                         }
                     }
-                    var eventMessageWithSameNumberWithinMinute = result_.FindLast(x =>
+                    var eventMessageWithSameNumberWithinMinute = result_.Find(x =>
                         (x.Phone == eventMessage.Phone) &&
                         Math.Abs((x.DateTime - targetDateTime).TotalSeconds) < 60);
 
                     while (eventMessageWithSameNumberWithinMinute != null)
                     {
-                        targetDateTime = eventMessageWithSameNumberWithinMinute.DateTime.AddMinutes(1);
+                        targetDateTime = eventMessageWithSameNumberWithinMinute.SentDateTime.AddMinutes(1);
                         eventMessageWithSameNumberWithinMinute = result_.Find(x =>
                             (x.Phone == eventMessage.Phone) &&
-                            Math.Abs((x.DateTime - targetDateTime).TotalSeconds) < 60);
+                            Math.Abs((x.SentDateTime - targetDateTime).TotalSeconds) < 60);
                     };
 
                     
                     var lastEventMessageWithDifferentNumberWithinTenSeconds = result_.Find(x =>
-                        (x.Phone != eventMessage.Phone) && Math.Abs((x.DateTime - targetDateTime).TotalSeconds) < 10);
+                        (x.Phone != eventMessage.Phone) && Math.Abs((x.SentDateTime - targetDateTime).TotalSeconds) < 10);
                     while (lastEventMessageWithDifferentNumberWithinTenSeconds != null)
                     {
-                        targetDateTime = lastEventMessageWithDifferentNumberWithinTenSeconds.DateTime.AddSeconds(10);
+                        targetDateTime = lastEventMessageWithDifferentNumberWithinTenSeconds.SentDateTime.AddSeconds(10);
                         lastEventMessageWithDifferentNumberWithinTenSeconds = result_.Find(x =>
-                            (x.Phone != eventMessage.Phone) && Math.Abs((x.DateTime - targetDateTime).TotalSeconds) < 10);
+                            (x.Phone != eventMessage.Phone) && Math.Abs((x.SentDateTime - targetDateTime).TotalSeconds) < 10);
                     }
 
                     eventMessage.DateTime = targetDateTime;
